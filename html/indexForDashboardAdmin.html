@@ -30,9 +30,12 @@
 
       <div class="today">
         <div class="muted">Today</div>
-        <div class="date">Oct 17, 2025</div>
+        <div class="date" id="todayDate"></div>
       </div>
     </aside>
+    
+    <div id="overlay"></div>
+
 
     <!-- Main Content -->
     <main class="main">
@@ -45,8 +48,8 @@
         </div>
 
         <div class="search">
-          <input type="text" placeholder="Search students or ID" />
-          <button class="btn">Add Attendance</button>
+          <input type="text" id="searchInput" placeholder="Search students or ID" />
+          <button class="btn" id="addAttendanceBtn">Add Attendance</button>
         </div>
       </div>
 
@@ -81,7 +84,7 @@
       <section class="panel">
         <div class="panel-header">
           <h3>Recent Attendance</h3>
-          <div class="muted">Showing 1 – 10 of 128</div>
+          <div class="muted" id="tableCount">No records</div>
         </div>
 
         <!-- Table (Desktop view) -->
@@ -94,99 +97,18 @@
                 <th>Class</th>
                 <th>Time</th>
                 <th>Status</th>
+                <th>Remarks</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="flex"><div class="avatar"></div>Maria N.</td>
-                <td>ST-0012</td>
-                <td>Grade 10A</td>
-                <td>07:59</td>
-                <td><span class="status present">Present</span></td>
-                <td class="muted">-</td>
-              </tr>
-              <tr>
-                <td class="flex"><div class="avatar"></div>John D.</td>
-                <td>ST-0034</td>
-                <td>Grade 10A</td>
-                <td>08:12</td>
-                <td><span class="status late">Late</span></td>
-                <td class="muted">Bus delay</td>
-              </tr>
-              <tr>
-                <td class="flex"><div class="avatar"></div>Sipho K.</td>
-                <td>ST-0045</td>
-                <td>Grade 9C</td>
-                <td>-</td>
-                <td><span class="status absent">Absent</span></td>
-                <td class="muted">Ill</td>
-              </tr>
-              <tr>
-                <td class="flex"><div class="avatar"></div>Aisha T.</td>
-                <td>ST-0110</td>
-                <td>Grade 11B</td>
-                <td>07:55</td>
-                <td><span class="status present">Present</span></td>
-                <td class="muted">-</td>
-              </tr>
+            <tbody id="attendanceTableBody">
+              <!-- Data dynamically injected by JS -->
             </tbody>
           </table>
         </div>
 
         <!-- Cards (Mobile view) -->
-        <div class="attendance-cards">
-          <div class="card">
-            <div class="flex">
-              <div class="avatar"></div>
-              <div>
-                <strong>Maria N.</strong>
-                <div class="muted">ID: ST-0012</div>
-              </div>
-            </div>
-            <div>Class: Grade 10A</div>
-            <div>Time: 07:59</div>
-            <div><span class="status present">Present</span></div>
-          </div>
-
-          <div class="card">
-            <div class="flex">
-              <div class="avatar"></div>
-              <div>
-                <strong>John D.</strong>
-                <div class="muted">ID: ST-0034</div>
-              </div>
-            </div>
-            <div>Class: Grade 10A</div>
-            <div>Time: 08:12</div>
-            <div><span class="status late">Late</span></div>
-            <div class="muted">Reason: Bus delay</div>
-          </div>
-
-          <div class="card">
-            <div class="flex">
-              <div class="avatar"></div>
-              <div>
-                <strong>Sipho K.</strong>
-                <div class="muted">ID: ST-0045</div>
-              </div>
-            </div>
-            <div>Class: Grade 9C</div>
-            <div><span class="status absent">Absent</span></div>
-            <div class="muted">Reason: Ill</div>
-          </div>
-
-          <div class="card">
-            <div class="flex">
-              <div class="avatar"></div>
-              <div>
-                <strong>Aisha T.</strong>
-                <div class="muted">ID: ST-0110</div>
-              </div>
-            </div>
-            <div>Class: Grade 11B</div>
-            <div>Time: 07:55</div>
-            <div><span class="status present">Present</span></div>
-          </div>
+        <div class="attendance-cards" id="attendanceCards">
+          <!-- Data dynamically injected by JS -->
         </div>
       </section>
     </main>

@@ -112,6 +112,6 @@ VALUES ('Josephina', 'Muntuumo', 'josephinamuntuumo@nust.na');
 -- Auto-enroll the student in all WAD classes
 -- This is the KEY: Students in 07BCMS can be enrolled in WAD classes
 INSERT INTO Enrollments (studentNo, classID)
-SELECT 224081985, classID
+SELECT 224081349, classID
 FROM Classes
 WHERE moduleCode = 'WAD';

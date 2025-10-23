@@ -6,7 +6,7 @@ const navLinks = sidebar.querySelectorAll('nav a');
 // Toggle sidebar
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('show');
-  overlay.classList.toggle('show');
+  overlay?.classList.toggle('show');
 });
 
 // Close sidebar on overlay click
@@ -47,9 +47,7 @@ function updateAttendanceStats() {
   document.getElementById("presentPercent").textContent = `${percent}% attendance`;
 }
 
-// Run it on page load
-updateAttendanceStats();
-
+// Load and render recent attendance
 async function loadRecentAttendance() {
   const tableBody = document.querySelector(".attendance-table tbody");
   const cardsContainer = document.querySelector(".attendance-cards");
@@ -91,13 +89,31 @@ async function loadRecentAttendance() {
       cardsContainer.appendChild(card);
     });
 
-    // Update stats
     updateAttendanceStats();
   } catch (err) {
     console.error("Error fetching attendance:", err);
   }
 }
 
-// Run on page load
-loadRecentAttendance();
+// Sidebar Date + Time updater
+function updateDateTime() {
+  const dateElem = document.getElementById('todayDate');
+  if (!dateElem) return;
 
+  const now = new Date();
+  const date = now.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  dateElem.innerHTML = `${date} <br><span class="muted" style="font-size:0.9em;">${time}</span>`;
+}
+
+// Initialize everything
+updateAttendanceStats();
+loadRecentAttendance();
+updateDateTime();
+setInterval(updateDateTime, 1000);
