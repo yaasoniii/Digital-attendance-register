@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Attendance System</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #ffffff, #eef2ff);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f172a;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #475569;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .header-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2563eb;
+      color: #fff;
+      border-radius: 50%;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .card:hover {
+      border-color: #bfdbfe;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-login {
+      background-color: #2563eb;
+      color: #fff;
+    }
+
+    .btn-login:hover {
+      background-color: #1e40af;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-icon" id="grad-icon"></div>
+      <h1>Student Attendance System</h1>
+      <p>Streamlined attendance tracking with QR code technology. Quick logins for all users.</p>
+    </div>
+
+    <div class="card">
+      <h2>Welcome</h2>
+
+      <p style="margin-top:20px; text-align:center;">
+        Quick QR-based check-ins<br>
+        Track attendance in real-time<br>
+        Access detailed analytics
+      </p>
+
+      <div class="btn-group">
+        <button class="btn btn-login" onclick="navigate('html/indexForlogIn.html')">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    function navigate(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
