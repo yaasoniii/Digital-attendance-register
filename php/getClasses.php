@@ -2,8 +2,8 @@
 require_once 'dbconnector.php';
 header('Content-Type: application/json');
 
-// Now includes totalSessions column
-$sql = "SELECT classID, courseCode, courseName, instructor, dayOfWeek, startTime, endTime, room, totalSessions 
+// Now returns moduleCode instead of courseCode
+$sql = "SELECT classID, moduleCode, moduleName, instructor, dayOfWeek, startTime, endTime, room, totalSessions 
         FROM Classes 
         ORDER BY 
         CASE dayOfWeek

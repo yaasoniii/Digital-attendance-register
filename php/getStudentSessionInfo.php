@@ -11,6 +11,7 @@ if (!$studentNo) {
     exit;
 }
 
+// Return student info with their program code (07BCMS)
 $sql = "SELECT studentNo, firstName, lastName, courseCode FROM Students WHERE studentNo = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $studentNo);

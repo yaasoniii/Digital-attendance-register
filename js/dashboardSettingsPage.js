@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!studentPinVal) setError(studentPinInput, "PIN is required"), errors.push("studentPin");
     else if(!/^\d{4}$/.test(studentPinVal)) setError(studentPinInput, "PIN must be 4 digits"), errors.push("studentPinInvalid");
 
-    if(!studentCourseInput.value.trim()) setError(studentCourseInput, "Course Code is required"), errors.push("studentCourse");
+    if(!studentCourseInput.value.trim()) setError(studentCourseInput, "Program Code is required"), errors.push("studentCourse");
 
     if(errors.length > 0) return;
 
@@ -149,11 +149,15 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch("../php/addClass.php", { method: "POST", body: formData });
       const data = await res.json();
-      if(data.error) alert(data.error);
-      else alert(data[0]);
-      closeModal(classModal);
-      classForm.reset();
-      loadClasses();
+      
+      if(data.error) {
+        alert(data.error);
+      } else {
+        alert(data.success || 'Class added successfully');
+        closeModal(classModal);
+        classForm.reset();
+        loadClasses();
+      }
     } catch (err) {
       console.error("Error saving class:", err);
       alert("Something went wrong saving the class.");
@@ -169,11 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
       classes.forEach(cls => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${cls.courseCode}</td>
-          <td>${cls.courseName}</td>
-          <td>${cls.totalClasses || '-'}</td>
+          <td>${cls.moduleCode}</td>
+          <td>${cls.moduleName}</td>
+          <td>${cls.totalSessions || '-'}</td>
           <td>${cls.instructor}</td>
-          <td>${cls.dayOfWeek} ${cls.startTime}-${cls.endTime}</td>
+          <td>${cls.dayOfWeek} ${cls.startTime.substring(0,5)}-${cls.endTime.substring(0,5)}</td>
           <td>${cls.room}</td>
           <td>
             <button onclick="editClass(${cls.classID})">✏️</button>

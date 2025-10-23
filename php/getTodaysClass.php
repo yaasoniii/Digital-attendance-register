@@ -11,13 +11,13 @@ if (!$studentNo) {
     exit;
 }
 
-// Get current day name - FIXED to use full day names
-$currentDay = date('l'); // Returns "Monday", "Tuesday", "Wednesday", "Thursday", etc.
+// Get current day name
+$currentDay = date('l');
 
-// Get today's class for this student
+// FIXED: Now queries based on Enrollments, not matching student's courseCode with class courseCode
+// This allows 07BCMS students to see their WAD classes
 $sql = "
-SELECT c.courseName, c.startTime, c.endTime, c.dayOfWeek, c.room,
-       c.instructor, c.courseCode
+SELECT c.moduleName, c.moduleCode, c.startTime, c.endTime, c.dayOfWeek, c.room, c.instructor
 FROM Enrollments e
 JOIN Classes c ON e.classID = c.classID
 WHERE e.studentNo = ? AND c.dayOfWeek = ?
@@ -32,18 +32,19 @@ $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
     echo json_encode([
-        'courseName' => $row['courseName'],
+        'courseName' => $row['moduleName'],
         'startTime' => date('H:i', strtotime($row['startTime'])),
         'endTime' => date('H:i', strtotime($row['endTime'])),
         'dayOfWeek' => $row['dayOfWeek'],
         'date' => date('l, F j, Y'),
         'room' => $row['room'],
         'instructor' => $row['instructor'],
-        'courseCode' => $row['courseCode']
+        'courseCode' => $row['moduleCode']
     ]);
 } else {
     echo json_encode([
-        'error' => 'No class found for today'
+        'error' => 'No class found for today',
+        'date' => date('l, F j, Y')
     ]);
 }
 

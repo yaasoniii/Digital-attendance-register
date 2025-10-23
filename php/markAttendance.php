@@ -1,12 +1,14 @@
 <?php
-error_reporting(0);        
-ini_set('display_errors', 0);
+// --- Error handling (enable for testing; disable later) ---
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 header('Content-Type: application/json');
 
 require_once 'dbConnector.php';
 
-// Get JSON input
+// --- Get JSON input ---
 $input = json_decode(file_get_contents('php://input'), true);
 $qrValue = $input['studentId'] ?? null;
 
@@ -23,7 +25,7 @@ if (!$studentNo || !is_numeric($studentNo)) {
     exit;
 }
 
-// Check if student exists
+// --- Verify student existence ---
 $stmtStudent = $conn->prepare("SELECT firstName, lastName FROM Students WHERE studentNo = ?");
 $stmtStudent->bind_param("i", $studentNo);
 $stmtStudent->execute();
@@ -34,13 +36,13 @@ if (!$student = $resultStudent->fetch_assoc()) {
     exit;
 }
 
-// Get current day and time - FIXED to match database format
-$currentDay = date('l'); // Returns "Monday", "Tuesday", "Wednesday", "Thursday", etc.
+// --- Current day and time ---
+$currentDay = date('l'); // e.g. Monday
 $currentTime = date('H:i:s');
 
-// Find class that is happening NOW for this student
+// --- Find class currently in session ---
 $sqlClass = "
-SELECT c.classID, c.courseName, c.startTime, c.endTime, c.dayOfWeek
+SELECT c.classID, c.moduleName, c.startTime, c.endTime, c.dayOfWeek
 FROM Enrollments e
 JOIN Classes c ON e.classID = c.classID
 WHERE e.studentNo = ? 
@@ -55,9 +57,9 @@ $stmtClass->execute();
 $resultClass = $stmtClass->get_result();
 
 if (!$class = $resultClass->fetch_assoc()) {
-    // Try to find ANY class today (even if not currently happening)
+    // --- Try to find any class today (for debug clarity) ---
     $sqlAnyClass = "
-    SELECT c.classID, c.courseName, c.startTime, c.endTime, c.dayOfWeek
+    SELECT c.classID, c.moduleName, c.startTime, c.endTime, c.dayOfWeek
     FROM Enrollments e
     JOIN Classes c ON e.classID = c.classID
     WHERE e.studentNo = ? 
@@ -72,7 +74,7 @@ if (!$class = $resultClass->fetch_assoc()) {
     
     if ($classAny = $resultAny->fetch_assoc()) {
         echo json_encode([
-            'error' => "Class '{$classAny['courseName']}' is scheduled for {$classAny['startTime']} - {$classAny['endTime']}. Current time: " . date('H:i:s')
+            'error' => "Class '{$classAny['moduleName']}' is scheduled for {$classAny['startTime']} - {$classAny['endTime']}. Current time: " . date('H:i:s')
         ]);
     } else {
         echo json_encode([
@@ -84,7 +86,7 @@ if (!$class = $resultClass->fetch_assoc()) {
 
 $classID = $class['classID'];
 
-// Check if already marked for THIS specific class today
+// --- Prevent double check-ins for the same class/day ---
 $today = date('Y-m-d');
 $stmtCheck = $conn->prepare("
     SELECT * FROM Attendance 
@@ -94,20 +96,24 @@ $stmtCheck = $conn->prepare("
 ");
 $stmtCheck->bind_param("iis", $studentNo, $classID, $today);
 $stmtCheck->execute();
+
 if ($stmtCheck->get_result()->num_rows > 0) {
     echo json_encode(['error' => 'Already checked in for this class today']);
     exit;
 }
 
-// Mark attendance
+// --- Insert new attendance record ---
 $stmtInsert = $conn->prepare("INSERT INTO Attendance (studentNo, classID, status) VALUES (?, ?, 'Present')");
 $stmtInsert->bind_param("ii", $studentNo, $classID);
-$stmtInsert->execute();
 
-echo json_encode([
-    'studentName' => $student['firstName'] . ' ' . $student['lastName'],
-    'courseName' => $class['courseName']
-]);
+if ($stmtInsert->execute()) {
+    echo json_encode([
+        'studentName' => $student['firstName'] . ' ' . $student['lastName'],
+        'courseName' => $class['moduleName']
+    ]);
+} else {
+    echo json_encode(['error' => 'Failed to record attendance']);
+}
 
 $conn->close();
 ?>

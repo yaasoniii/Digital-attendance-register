@@ -159,7 +159,7 @@
     </div>
   </div>
 
-<!-- Class Modal - UPDATED VERSION -->
+<!-- Class Modal - UPDATED for Modules -->
 <div id="classModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -168,16 +168,17 @@
     </div>
     <form id="classForm">
       <div class="form-group">
-        <label class="form-label" for="classCode">Course Code</label>
-        <input class="form-input" id="classCode" name="courseCode" placeholder="e.g., WAD" required>
+        <label class="form-label" for="classCode">Module Code</label>
+        <input class="form-input" id="classCode" name="moduleCode" placeholder="e.g., WAD" required>
+        <small style="color: #6b7280; font-size: 0.85rem;">Module code like WAD, DSA, DB</small>
       </div>
       
       <div class="form-group">
-        <label class="form-label" for="className">Course Name</label>
-        <input class="form-input" id="className" name="courseName" placeholder="e.g., Web Application Development" required>
+        <label class="form-label" for="className">Module Name</label>
+        <input class="form-input" id="className" name="moduleName" placeholder="e.g., Web Application Development" required>
       </div>
       
-      <!-- NEW FIELD: Total Sessions -->
+      <!-- Total Sessions -->
       <div class="form-group">
         <label class="form-label" for="classTotalSessions">Total Sessions</label>
         <input class="form-input" id="classTotalSessions" name="totalSessions" 

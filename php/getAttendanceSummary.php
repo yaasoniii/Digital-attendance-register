@@ -9,40 +9,31 @@ if (!$studentNo) {
     exit;
 }
 
-// 1. Get the courseCode of the student
-$sqlCourse = "SELECT courseCode FROM Students WHERE studentNo = ?";
-$stmtCourse = $conn->prepare($sqlCourse);
-$stmtCourse->bind_param("i", $studentNo);
-$stmtCourse->execute();
-$courseResult = $stmtCourse->get_result();
-$student = $courseResult->fetch_assoc();
-$courseCode = $student['courseCode'] ?? null;
-
-if (!$courseCode) {
-    echo json_encode(['error' => 'Student course not found']);
-    exit;
-}
-
-// 2. Total classes for this course
-$sqlTotal = "SELECT COUNT(*) AS total FROM Classes WHERE courseCode = ?";
+// FIXED: Calculate total classes based on student's enrollments, not course match
+// Total classes this student is enrolled in
+$sqlTotal = "
+    SELECT SUM(c.totalSessions) AS total
+    FROM Enrollments e
+    JOIN Classes c ON e.classID = c.classID
+    WHERE e.studentNo = ?
+";
 $stmtTotal = $conn->prepare($sqlTotal);
-$stmtTotal->bind_param("s", $courseCode);
+$stmtTotal->bind_param("i", $studentNo);
 $stmtTotal->execute();
 $totalResult = $stmtTotal->get_result()->fetch_assoc();
 $totalClasses = $totalResult['total'] ?? 0;
 
-// 3. Attended classes for this student
+// Attended classes for this student
 $sqlAttended = "SELECT COUNT(*) AS attended 
                 FROM Attendance a
-                JOIN Classes c ON a.classID = c.classID
-                WHERE a.studentNo = ? AND c.courseCode = ? AND a.status = 'Present'";
+                WHERE a.studentNo = ? AND a.status = 'Present'";
 $stmtAttended = $conn->prepare($sqlAttended);
-$stmtAttended->bind_param("is", $studentNo, $courseCode);
+$stmtAttended->bind_param("i", $studentNo);
 $stmtAttended->execute();
 $attendedResult = $stmtAttended->get_result()->fetch_assoc();
 $attended = $attendedResult['attended'] ?? 0;
 
-// 4. Return JSON
+// Return JSON
 echo json_encode([
     'totalClasses' => $totalClasses,
     'attended' => $attended

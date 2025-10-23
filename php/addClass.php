@@ -3,8 +3,8 @@ header('Content-Type: application/json');
 require_once '../php/dbConnector.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $courseCode     = trim($_POST['courseCode'] ?? '');
-    $courseName     = trim($_POST['courseName'] ?? '');
+    $moduleCode     = trim($_POST['moduleCode'] ?? '');
+    $moduleName     = trim($_POST['moduleName'] ?? '');
     $totalSessions  = intval($_POST['totalSessions'] ?? 12);
     $instructor     = trim($_POST['instructor'] ?? '');
     $dayOfWeek      = trim($_POST['dayOfWeek'] ?? '');
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $room           = trim($_POST['room'] ?? '');
 
     // Validate required fields
-    if (!$courseCode || !$courseName || !$instructor || !$dayOfWeek || !$startTime || !$endTime || !$room) {
+    if (!$moduleCode || !$moduleName || !$instructor || !$dayOfWeek || !$startTime || !$endTime || !$room) {
         echo json_encode(['error' => 'All fields are required']);
         exit;
     }
@@ -25,18 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Insert class with totalSessions
+        // Insert class with moduleCode instead of courseCode
         $stmt = $conn->prepare("
-            INSERT INTO Classes (courseName, courseCode, dayOfWeek, startTime, endTime, room, instructor, totalSessions)
+            INSERT INTO Classes (moduleName, moduleCode, dayOfWeek, startTime, endTime, room, instructor, totalSessions)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->bind_param("sssssssi", $courseName, $courseCode, $dayOfWeek, $startTime, $endTime, $room, $instructor, $totalSessions);
+        $stmt->bind_param("sssssssi", $moduleName, $moduleCode, $dayOfWeek, $startTime, $endTime, $room, $instructor, $totalSessions);
         $stmt->execute();
 
         echo json_encode(['success' => 'Class added successfully', 'totalSessions' => $totalSessions]);
     } catch (mysqli_sql_exception $e) {
         if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
-            echo json_encode(['error' => 'A class with this code, day, and time already exists']);
+            echo json_encode(['error' => 'A class with this module, day, and time already exists']);
         } else {
             echo json_encode(['error' => $e->getMessage()]);
         }
