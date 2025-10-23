@@ -8,10 +8,18 @@ require_once 'dbConnector.php';
 
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
-$studentNo = $input['studentId'] ?? null;
+$qrValue = $input['studentId'] ?? null;
 
-if (!$studentNo) {
+if (!$qrValue) {
     echo json_encode(['error' => 'Student ID missing']);
+    exit;
+}
+
+$parts = explode('-', $qrValue);
+$studentNo = $parts[0] ?? null;
+
+if (!$studentNo || !is_numeric($studentNo)) {
+    echo json_encode(['error' => 'Invalid QR code format']);
     exit;
 }
 
@@ -26,33 +34,66 @@ if (!$student = $resultStudent->fetch_assoc()) {
     exit;
 }
 
-//  Check if there is a class today for this student
+// Get current day and time
+$currentDay = date('l'); // e.g., "Monday", "Tuesday"
+$currentTime = date('H:i:s'); // e.g., "09:30:00"
+
+// Find class that is happening NOW for this student
 $sqlClass = "
-SELECT c.classID, c.courseName
+SELECT c.classID, c.courseName, c.startTime, c.endTime
 FROM Enrollments e
 JOIN Classes c ON e.classID = c.classID
-WHERE e.studentNo = ? AND c.dayOfWeek = DAYNAME(CURDATE())
+WHERE e.studentNo = ? 
+  AND c.dayOfWeek = ?
+  AND TIME(?) BETWEEN c.startTime AND c.endTime
 LIMIT 1
 ";
 
 $stmtClass = $conn->prepare($sqlClass);
-$stmtClass->bind_param("i", $studentNo);
+$stmtClass->bind_param("iss", $studentNo, $currentDay, $currentTime);
 $stmtClass->execute();
 $resultClass = $stmtClass->get_result();
 
 if (!$class = $resultClass->fetch_assoc()) {
-    echo json_encode(['error' => 'No class scheduled for today']);
+    // Try to find ANY class today (even if not currently happening)
+    $sqlAnyClass = "
+    SELECT c.classID, c.courseName, c.startTime, c.endTime
+    FROM Enrollments e
+    JOIN Classes c ON e.classID = c.classID
+    WHERE e.studentNo = ? 
+      AND c.dayOfWeek = ?
+    LIMIT 1
+    ";
+    
+    $stmtAny = $conn->prepare($sqlAnyClass);
+    $stmtAny->bind_param("is", $studentNo, $currentDay);
+    $stmtAny->execute();
+    $resultAny = $stmtAny->get_result();
+    
+    if ($classAny = $resultAny->fetch_assoc()) {
+        echo json_encode([
+            'error' => "Class is scheduled for {$classAny['startTime']} - {$classAny['endTime']}. Current time: " . date('H:i:s')
+        ]);
+    } else {
+        echo json_encode(['error' => "No class scheduled for today ({$currentDay})"]);
+    }
     exit;
 }
 
 $classID = $class['classID'];
 
-//  Check if already marked
-$stmtCheck = $conn->prepare("SELECT * FROM Attendance WHERE studentNo = ? AND classID = ?");
-$stmtCheck->bind_param("ii", $studentNo, $classID);
+// Check if already marked for THIS specific class today
+$today = date('Y-m-d');
+$stmtCheck = $conn->prepare("
+    SELECT * FROM Attendance 
+    WHERE studentNo = ? 
+      AND classID = ? 
+      AND DATE(attendanceDate) = ?
+");
+$stmtCheck->bind_param("iis", $studentNo, $classID, $today);
 $stmtCheck->execute();
 if ($stmtCheck->get_result()->num_rows > 0) {
-    echo json_encode(['error' => 'Already checked in for today']);
+    echo json_encode(['error' => 'Already checked in for this class today']);
     exit;
 }
 
@@ -67,3 +108,4 @@ echo json_encode([
 ]);
 
 $conn->close();
+?>
