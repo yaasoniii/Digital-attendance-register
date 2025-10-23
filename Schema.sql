@@ -102,16 +102,21 @@ INSERT INTO Modules (moduleCode, moduleName, programCode) VALUES
 ('DB', 'Database Systems', '07BCMS'),
 ('OS', 'Operating Systems', '07BCMS');
 
--- Insert a sample instructor
-INSERT INTO Instructors (firstName, lastName, email) 
-VALUES ('Josephina', 'Muntuumo', 'josephinamuntuumo@nust.na');
+DELIMITER //
 
+CREATE TRIGGER auto_enroll_07BCMS_students
+AFTER INSERT ON Students
+FOR EACH ROW
+BEGIN
+  -- Only auto-enroll if student is in program 07BCMS
+  IF NEW.courseCode = '07BCMS' THEN
+    INSERT INTO Enrollments (studentNo, classID)
+    SELECT NEW.studentNo, c.classID
+    FROM Classes c
+    INNER JOIN Modules m ON c.moduleCode = m.moduleCode
+    WHERE m.programCode = '07BCMS';
+  END IF;
+END;
+//
 
-
-
--- Auto-enroll the student in all WAD classes
--- This is the KEY: Students in 07BCMS can be enrolled in WAD classes
-INSERT INTO Enrollments (studentNo, classID)
-SELECT 224081349, classID
-FROM Classes
-WHERE moduleCode = 'WAD';
+DELIMITER ;
