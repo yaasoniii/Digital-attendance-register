@@ -1,0 +1,207 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: linear-gradient(to bottom right, #eff6ff, #ffffff, #eef2ff);
+    min-height: 100vh;
+    color: #1e293b;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    max-width: 400px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.login-box:hover {
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+}
+
+.heading h1 {
+    color: #0f172a;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.radioType {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.studentRadio,
+.adminRadio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radioType input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+.radioType label {
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    user-select: none;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.input-field label {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.input-field input {
+    height: 45px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    outline: none;
+    background: #f8fafc;
+    padding: 0 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-field input:focus {
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-field input::placeholder {
+    color: #94a3b8;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin-top: 2px;
+    min-height: 20px;
+}
+
+input.incorrect {
+    border-color: #dc2626;
+    background: #ffffff;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.remember input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+.remember label {
+    color: #475569;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.submit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.login-btn {
+    width: 100%;
+    height: 45px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    background-color: #2563eb;
+    transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+    background-color: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.forgot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    border-top: 1px solid #e1e3e5;
+
+}
+
+.forgot-text {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    margin-top: 15px;
+
+}
+
+.forgot-text:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}

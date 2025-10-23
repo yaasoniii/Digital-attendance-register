@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Settings - Digital Attendance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/styleForSettingsPage.css">
+  <script src="../js/dashboardSettingsPage.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="brand">
+          <div class="logo">AD</div>
+          <div>
+            <h1>Attendify</h1>
+            <div class="kpi">Digital attendance</div>
+          </div>
+        </div>
+
+        <nav>
+          <a href="../html/indexForDashboardAdmin.html">Dashboard</a>
+          <a href="#" class="active">Settings</a>
+        </nav>
+      </div>
+      
+      <div class="logout-section">
+        <a href="../index.html" class="logout-btn">Logout</a>
+      </div>
+
+      <div class="today">
+        <div class="muted">Today</div>
+        <div class="date">Oct 17, 2025</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <button class="sidebar-toggle" id="toggleBtn">☰</button>
+
+      <div class="header-content">
+        <h1>System Settings</h1>
+        <p>Manage students, classes, and system configuration</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="students">
+          <i class="fas fa-users"></i> Students
+        </button>
+        <button class="tab-btn" data-tab="classes">
+          <i class="fas fa-book"></i> Classes
+        </button>
+      </div>
+
+      <!-- Students Section -->
+      <section id="students" class="tab-content active">
+        <div class="section-header">
+          <h2>Student Management</h2>
+          <button class="add-btn" id="addStudentBtn">
+            <i class="fas fa-plus"></i> Add Student
+          </button>
+        </div>
+        <div class="table-container">
+          <table id="studentTable">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- JS will populate students here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="count-display" id="studentCount">Showing 0 students</div>
+      </section>
+
+      <!-- Classes Section -->
+      <section id="classes" class="tab-content">
+        <div class="section-header">
+          <h2>Class Management</h2>
+          <button class="add-btn" id="addClassBtn">
+            <i class="fas fa-plus"></i> Add Class
+          </button>
+        </div>
+        <div class="table-container">
+          <table id="classTable">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Total Classes</th>
+                <th>Instructor</th>
+                <th>Schedule</th>
+                <th>Room</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- JS will populate classes here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="count-display" id="classCount">Showing 0 classes</div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Student Modal -->
+  <div id="studentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="studentModalTitle">Add Student</h3>
+        <button type="button" class="close-btn" id="closeStudentModal">&times;</button>
+      </div>
+      <form id="studentForm" method="POST" action="../php/addStudent.php">
+        
+        <div class="form-group">
+          <label for="studentId">Student ID</label>
+          <input class="form-input" id="studentId" name="studentId" placeholder="e.g., 2240..">
+          <span class="error-message" id="studentIdError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentName">First Name</label>
+          <input class="form-input" id="studentName" name="studentName" placeholder="First Name">
+          <span class="error-message" id="studentNameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentSurname">Last Name</label>
+          <input class="form-input" id="studentSurname" name="studentSurname" placeholder="Last Name">
+          <span class="error-message" id="studentSurnameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentPin">PIN</label>
+          <input class="form-input" id="studentPin" name="studentPin" placeholder="4 digits" maxlength="4" type="password">
+          <span class="error-message" id="studentPinError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentCourse">Course Code</label>
+          <input class="form-input" id="studentCourse" name="studentCourse" placeholder="Course Code">
+          <span class="error-message" id="studentCourseError"></span>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-cancel" id="cancelStudentBtn">Cancel</button>
+          <button type="submit" class="btn btn-save" id="saveStudentBtn">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Class Modal -->
+  <div id="classModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="classModalTitle">Add Class</h3>
+        <button class="close-btn" id="closeClassModal">&times;</button>
+      </div>
+      <form id="classForm">
+        <div class="form-group">
+          <label class="form-label" for="classCode">Course Code</label>
+          <input class="form-input" id="classCode" name="courseCode" placeholder="e.g., WAD" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="className">Course Name</label>
+          <input class="form-input" id="className" name="courseName" placeholder="Course Name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classTotalClasses">Total Classes</label>
+          <input class="form-input" id="classTotalClasses" name="totalClasses" placeholder="Total Classes" type="number">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classInstructor">Instructor</label>
+          <input class="form-input" id="classInstructor" name="instructor" placeholder="Instructor" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classDay">Day of Week</label>
+          <input class="form-input" id="classDay" name="dayOfWeek" placeholder="e.g., Wednesday" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classStartTime">Start Time</label>
+          <input class="form-input" id="classStartTime" name="startTime" type="time" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classEndTime">End Time</label>
+          <input class="form-input" id="classEndTime" name="endTime" type="time" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classRoom">Room</label>
+          <input class="form-input" id="classRoom" name="room" placeholder="Room" required>
+        </div>
+        <div class="modal-buttons">
+          <button class="btn btn-cancel" id="cancelClassBtn">Cancel</button>
+          <button class="btn btn-save" id="saveClassBtn" type="submit">Save Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const sidebar = document.getElementById('sidebar');
+    const navLinks = sidebar.querySelectorAll('nav a');
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('show');
+    });
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('show');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

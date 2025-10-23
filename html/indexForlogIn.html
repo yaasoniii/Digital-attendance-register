@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Attendance Login</title>
+    <link rel="stylesheet" href="../css/styleForLogIn.css">
+    <script src="../js/validationForLogIn.js" defer></script>
+</head>
+<body>
+    <div class="box">
+        <div class="login-box">
+            <div class="heading">
+                <h1>Log in</h1>
+            </div>
+
+            <form id="logInForm" method="post" action="../php/logIn.php">
+                <div class="radioType">
+                    <div class="studentRadio">
+                        <input type="radio" name="S/A" id="studentRadioLogIn" value="student" checked>
+                        <label for="studentRadioLogIn">Student</label>
+                    </div>
+                    <div class="adminRadio">
+                        <input type="radio" name="S/A" id="adminRadioLogIn" value="admin">
+                        <label for="adminRadioLogIn">Admin</label>
+                    </div>
+                </div>
+
+                <div class="input-group" id="loginFields">
+                    <!-- Student Fields -->
+                    <div class="input-field studentField">
+                        <label for="loginNumberSL">Student Number:</label>
+                        <input type="text" name="studentNo" class="input-box" id="loginNumberSL">
+                        <span class="error-message" id="loginStudentNumberError"></span>
+                    </div>
+
+                    <div class="input-field studentField">
+                        <label for="loginPasswordSL">Password:</label>
+                        <input type="password" name="studentPassword" class="input-box" id="loginPasswordSL">
+                        <span class="error-message" id="loginPasswordError"></span>
+                    </div>
+
+                    <!-- Admin Fields -->
+                    <div class="input-field adminField" style="display:none;">
+                        <label for="adminUsernameSL">Admin Username:</label>
+                        <input type="text" name="adminUsername" class="input-box" id="adminUsernameSL">
+                        <span class="error-message" id="adminUsernameError"></span>
+                    </div>
+
+                    <div class="input-field adminField" style="display:none;">
+                        <label for="adminPasswordSL">Admin Password:</label>
+                        <input type="password" name="adminPassword" class="input-box" id="adminPasswordSL">
+                        <span class="error-message" id="adminPasswordError"></span>
+                    </div>
+
+                    <div class="remember">
+                        <input type="checkbox" id="form-check" class="check">
+                        <label for="form-check">Remember Me</label>
+                    </div>
+
+                    <div class="submit">
+                        <button type="submit" class="login-btn">Log In</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="forgot">
+                <a href="" target="_blank" class="forgot-text">Forgot password?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

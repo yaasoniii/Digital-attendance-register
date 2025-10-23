@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/styleForTerminal.css">
+  <script src="../js/Terminal.js" defer></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <title>Student Attendance Terminal</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Student Attendance Terminal</h1>
+      <p>WAD - Web Application Development</p>
+    </div>
+
+    <!-- Class Information -->
+    <div class="card">
+      <h2>Class Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Time:</span>
+          <span class="info-value">9:30 - 11:00</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Room:</span>
+          <span class="info-value">Room A101</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date:</span>
+          <span class="info-value">Wednesday, September 17, 2025</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Current Time:</span>
+          <span class="info-value" id="currentTime">--:--:--</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Scanner -->
+    <div class="card">
+      <h2>QR Code Scanner</h2>
+      <div id="reader" class="scanner-area"></div>
+      <p class="hint">Align your QR code within the camera view to check in</p>
+    </div>
+
+    <!-- Attendance List -->
+    <div class="card">
+      <h2>Today's Check-ins (<span id="checkCount" class="check-count">0</span>)</h2>
+      <div id="attendanceList" class="attendance-list">
+        <p class="muted">No students have checked in yet today.</p>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>How to check in:</h3>
+      <ol>
+        <li>Open your student QR code on your device</li>
+        <li>Position it in front of the camera</li>
+        <li>Wait for the confirmation message</li>
+        <li>You're checked in!</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>

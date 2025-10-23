@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="../css/styleForSD.css">
+  <script src="../js/studentDashboard.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="avatar">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User" />
+      </div>
+      <div>
+        <h1 id="student-name">Welcome, <span></span></h1>
+        <p id="student-id">Student ID: <span></span></p>
+      </div>
+    </div>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+  </div>
+
+  <!-- Class Alert -->
+  <div id="class-alert" class="alert hidden">
+    <p>Your class is starting soon! Make sure to scan your QR code.</p>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <!-- Left Column -->
+      <div class="left">
+        <!-- Current Time -->
+        <div class="card">
+          <h3>Current Time</h3>
+          <p id="current-time" class="mono"></p>
+        </div>
+
+        <!-- Today's Class -->
+        <div class="card">
+          <h3>Today's Class</h3>
+          <p><strong>Course:</strong> <span id="class-course">--</span></p>
+          <p><strong>Time:</strong> <span id="class-time">--</span></p>
+          <p><strong>Date:</strong> <span id="class-date">--</span></p>
+          <p><strong>Room:</strong> <span id="class-room">--</span></p>
+          <p><strong>Instructor:</strong> <span id="class-instructor">--</span></p>
+        </div>
+
+        <!-- Check-In Instructions -->
+        <div class="card info">
+          <h3>How to Check In</h3>
+          <ol>
+            <li>Show your QR code on this page</li>
+            <li>Go to the attendance terminal</li>
+            <li>Scan your QR code</li>
+            <li>Wait for confirmation</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="right">
+        <!-- QR Code -->
+        <div class="card">
+          <h3>Your Attendance QR Code</h3>
+          <div id="qr-code" class="qr-box"></div>
+          <div class="info-box">
+            <p><strong>Student Name:</strong> <span id="info-name">--</span></p>
+            <p><strong>Student ID:</strong> <span id="info-id">--</span></p>
+            <p><strong>Course:</strong> <span id="info-course">--</span></p>
+          </div>
+          <button id="download-btn" class="download-btn">Download QR Code</button>
+          <div class="notice">
+             <strong>Important:</strong> This QR code is unique to you. Don't share it.
+          </div>
+        </div>
+
+        <!-- Attendance Summary -->
+        <div class="card">
+          <h3>Attendance Summary</h3>
+          <div class="stats">
+            <div>
+              <p>Total Classes</p>
+              <strong id="total-classes">--</strong>
+            </div>
+            <div>
+              <p>Attended</p>
+              <strong id="attended-classes" class="green">--</strong>
+            </div>
+            <div>
+              <p>Rate</p>
+              <strong id="attendance-rate" class="blue">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
