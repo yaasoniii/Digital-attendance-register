@@ -94,9 +94,7 @@ VALUES
     ('Web Application Development', 'Wednesday', '09:30:00', '11:00:00', 'A101', 'John Doe', 'WAD'),
     ('Web Application Development', 'Friday', '04:00:00', '06:00:00', 'B202', 'John Doe', 'WAD');
 
--- Insert a sample student (password is "1234")
-INSERT INTO Students (studentNo, firstName, lastName, PasswordHash, courseCode)
-VALUES (224081985, 'Test', 'Student', '$2y$10$YourHashedPasswordHere', 'WAD');
+
 
 -- Auto-enroll the student in all WAD classes
 INSERT INTO Enrollments (studentNo, classID)
