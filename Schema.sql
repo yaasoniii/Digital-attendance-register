@@ -1,27 +1,43 @@
--- Drop existing database and recreate
-DROP DATABASE IF EXISTS attendanceLog1;
-CREATE DATABASE attendanceLog1;
-USE attendanceLog1;
+-- Active: 1759930512323@@127.0.0.1@3306
+-- Active: 1759930512323@@127.0.0.1@3306
 
--- Students Table (courseCode = their main program like 07BCMS)
+
+
+USE attendanceLog;
 CREATE TABLE Students(
-    studentNo INT PRIMARY KEY NOT NULL,
-    firstName VARCHAR(15),
-    lastName VARCHAR(25),
-    PasswordHash VARCHAR(255) NOT NULL,
-    courseCode VARCHAR(15)  -- Main program code like 07BCMS
+studentNo INT PRIMARY KEY NOT NULL,
+firstName VARCHAR(15),
+lastName VARCHAR(25),
+PasswordHash VARCHAR(255) NOT  NULL,
+courseCode VARCHAR(15)
 );
 
--- Admin Table
+
 CREATE TABLE Admin(
-    adminID VARCHAR(10) PRIMARY KEY,
-    Name VARCHAR(15),
-    Surname VARCHAR(25),
-    username VARCHAR(30),
-    PasswordHash VARCHAR(255) NOT NULL
+adminID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(15),
+Surname VARCHAR(25),
+username VARCHAR(30),
+PasswordHash VARCHAR(255) NOT NULL
 );
 
--- Instructors Table
+CREATE TABLE Attendance(
+attendanceID INT PRIMARY KEY auto_increment,
+studentNo INT NOT NULL,
+attendanceDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+status VARCHAR(10) NOT NULL,
+FOREIGN KEY (studentNo) REFERENCES Students(studentNo)
+);
+
+
+CREATE TABLE qrCode(
+    qrCodeId INT PRIMARY KEY AUTO_INCREMENT,
+    studentNo INT NOT NULL,
+    qrValue VARCHAR(255) NOT NULL,
+    sessionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (studentNo) REFERENCES Students(studentNo)
+);
+
 CREATE TABLE Instructors (
     instructorID INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(50) NOT NULL,
@@ -29,94 +45,37 @@ CREATE TABLE Instructors (
     email VARCHAR(100)
 );
 
--- Programs Table (Main courses like 07BCMS)
-CREATE TABLE Programs (
-    programCode VARCHAR(15) PRIMARY KEY,
-    programName VARCHAR(100) NOT NULL
-);
-
--- Modules Table (Subjects under programs like WAD)
-CREATE TABLE Modules (
-    moduleCode VARCHAR(15) PRIMARY KEY,
-    moduleName VARCHAR(100) NOT NULL,
-    programCode VARCHAR(15),
-    FOREIGN KEY (programCode) REFERENCES Programs(programCode) ON DELETE CASCADE
-);
-
--- Classes Table (Now uses moduleCode instead of courseCode)
 CREATE TABLE Classes (
     classID INT PRIMARY KEY AUTO_INCREMENT,
-    moduleCode VARCHAR(15) NOT NULL,
-    moduleName VARCHAR(50) NOT NULL,
-    dayOfWeek VARCHAR(15) NOT NULL,
+    courseName VARCHAR(50) NOT NULL,
+    dayOfWeek VARCHAR(10) NOT NULL,        -- e.g., Monday, Tuesday
     startTime TIME NOT NULL,
     endTime TIME NOT NULL,
     room VARCHAR(50) NOT NULL,
     instructor VARCHAR(50) NOT NULL,
-    totalSessions INT NOT NULL DEFAULT 12,
-    FOREIGN KEY (moduleCode) REFERENCES Modules(moduleCode) ON DELETE CASCADE,
-    UNIQUE(moduleCode, dayOfWeek, startTime)
+    courseCode VARCHAR(15) NOT NULL,       -- links to Students.courseCode
+    UNIQUE(courseCode, dayOfWeek, startTime) -- avoid duplicate classes
 );
 
--- Enrollments Table (Links students to specific classes)
 CREATE TABLE Enrollments (
     enrollmentID INT PRIMARY KEY AUTO_INCREMENT,
     studentNo INT NOT NULL,
     classID INT NOT NULL,
-    FOREIGN KEY (studentNo) REFERENCES Students(studentNo) ON DELETE CASCADE,
-    FOREIGN KEY (classID) REFERENCES Classes(classID) ON DELETE CASCADE
+    FOREIGN KEY (studentNo) REFERENCES Students(studentNo),
+    FOREIGN KEY (classID) REFERENCES Classes(classID)
 );
 
--- Attendance Table
-CREATE TABLE Attendance(
-    attendanceID INT PRIMARY KEY AUTO_INCREMENT,
-    studentNo INT NOT NULL,
-    classID INT NOT NULL,
-    attendanceDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(10) NOT NULL,
-    FOREIGN KEY (studentNo) REFERENCES Students(studentNo) ON DELETE CASCADE,
-    FOREIGN KEY (classID) REFERENCES Classes(classID) ON DELETE CASCADE
+CREATE TABLE Courses (
+    courseCode VARCHAR(15) PRIMARY KEY,
+    courseName VARCHAR(50) NOT NULL,
+    totalSessions INT NOT NULL DEFAULT 0
 );
 
--- QR Code Table
-CREATE TABLE qrCode(
-    qrCodeId INT PRIMARY KEY AUTO_INCREMENT,
-    studentNo INT NOT NULL,
-    qrValue VARCHAR(255) NOT NULL,
-    sessionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (studentNo) REFERENCES Students(studentNo) ON DELETE CASCADE
-);
 
--- ===== Sample Data =====
+INSERT INTO Enrollments (studentNo, classID)
+SELECT s.studentNo, c.classID
+FROM Students s
+JOIN Classes c ON s.courseCode = c.courseCode;
 
--- Insert Programs
-INSERT INTO Programs (programCode, programName) VALUES 
-('07BCMS', 'Bachelor of Computer Science'),
-('07BENG', 'Bachelor of Engineering'),
-('07BACC', 'Bachelor of Accounting');
 
--- Insert Modules under 07BCMS
-INSERT INTO Modules (moduleCode, moduleName, programCode) VALUES 
-('WAD', 'Web Application Development', '07BCMS'),
-('DSA', 'Data Structures and Algorithms', '07BCMS'),
-('DB', 'Database Systems', '07BCMS'),
-('OS', 'Operating Systems', '07BCMS');
 
-DELIMITER //
-
-CREATE TRIGGER auto_enroll_07BCMS_students
-AFTER INSERT ON Students
-FOR EACH ROW
-BEGIN
-  -- Only auto-enroll if student is in program 07BCMS
-  IF NEW.courseCode = '07BCMS' THEN
-    INSERT INTO Enrollments (studentNo, classID)
-    SELECT NEW.studentNo, c.classID
-    FROM Classes c
-    INNER JOIN Modules m ON c.moduleCode = m.moduleCode
-    WHERE m.programCode = '07BCMS';
-  END IF;
-END;
-//
-
-DELIMITER ;

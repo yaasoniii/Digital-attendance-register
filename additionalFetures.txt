@@ -1,0 +1,3 @@
+geo location
+client message
+cool down time
