@@ -58,7 +58,7 @@
         <div class="card">
           <h3>Total Students</h3>
           <p id="totalStudents">0</p>
-          <div class="muted">Across all classes</div>
+          <div class="muted">Enrolled for today</div>
         </div>
 
         <div class="card">
@@ -70,20 +70,20 @@
         <div class="card">
           <h3>Absent</h3>
           <p id="absentStudents">0</p>
-          <div class="muted">Excused + unexcused</div>
+          <div class="muted">Not checked in</div>
         </div>
 
         <div class="card">
           <h3>Late</h3>
           <p id="lateStudents">0</p>
-          <div class="muted">Arrived after start time</div>
+          <div class="muted">Arrived after 10 min</div>
         </div>
       </section>
 
       <!-- Recent Attendance -->
       <section class="panel">
         <div class="panel-header">
-          <h3>Recent Attendance</h3>
+          <h3>Today's Attendance</h3>
           <div class="muted" id="tableCount">No records</div>
         </div>
 
@@ -97,7 +97,6 @@
                 <th>Class</th>
                 <th>Time</th>
                 <th>Status</th>
-                <th>Remarks</th>
               </tr>
             </thead>
             <tbody id="attendanceTableBody">

@@ -102,14 +102,23 @@ if ($stmtCheck->get_result()->num_rows > 0) {
     exit;
 }
 
-// --- Insert new attendance record ---
-$stmtInsert = $conn->prepare("INSERT INTO Attendance (studentNo, classID, status) VALUES (?, ?, 'Present')");
-$stmtInsert->bind_param("ii", $studentNo, $classID);
+// --- Calculate if student is late (more than 10 minutes after start time) ---
+$startTime = strtotime($class['startTime']);
+$currentTimeStamp = strtotime($currentTime);
+$minutesLate = ($currentTimeStamp - $startTime) / 60;
+
+// Determine status: Present if within 10 minutes, Late if more than 10 minutes
+$status = ($minutesLate <= 10) ? 'Present' : 'Late';
+
+// --- Insert new attendance record with calculated status ---
+$stmtInsert = $conn->prepare("INSERT INTO Attendance (studentNo, classID, status) VALUES (?, ?, ?)");
+$stmtInsert->bind_param("iis", $studentNo, $classID, $status);
 
 if ($stmtInsert->execute()) {
     echo json_encode([
         'studentName' => $student['firstName'] . ' ' . $student['lastName'],
-        'courseName' => $class['moduleName']
+        'courseName' => $class['moduleName'],
+        'status' => $status
     ]);
 } else {
     echo json_encode(['error' => 'Failed to record attendance']);
