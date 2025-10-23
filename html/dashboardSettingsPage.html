@@ -159,53 +159,73 @@
     </div>
   </div>
 
-  <!-- Class Modal -->
-  <div id="classModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="classModalTitle">Add Class</h3>
-        <button class="close-btn" id="closeClassModal">&times;</button>
-      </div>
-      <form id="classForm">
-        <div class="form-group">
-          <label class="form-label" for="classCode">Course Code</label>
-          <input class="form-input" id="classCode" name="courseCode" placeholder="e.g., WAD" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="className">Course Name</label>
-          <input class="form-input" id="className" name="courseName" placeholder="Course Name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classTotalClasses">Total Classes</label>
-          <input class="form-input" id="classTotalClasses" name="totalClasses" placeholder="Total Classes" type="number">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classInstructor">Instructor</label>
-          <input class="form-input" id="classInstructor" name="instructor" placeholder="Instructor" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classDay">Day of Week</label>
-          <input class="form-input" id="classDay" name="dayOfWeek" placeholder="e.g., Wednesday" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classStartTime">Start Time</label>
-          <input class="form-input" id="classStartTime" name="startTime" type="time" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classEndTime">End Time</label>
-          <input class="form-input" id="classEndTime" name="endTime" type="time" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="classRoom">Room</label>
-          <input class="form-input" id="classRoom" name="room" placeholder="Room" required>
-        </div>
-        <div class="modal-buttons">
-          <button class="btn btn-cancel" id="cancelClassBtn">Cancel</button>
-          <button class="btn btn-save" id="saveClassBtn" type="submit">Save Class</button>
-        </div>
-      </form>
+<!-- Class Modal - UPDATED VERSION -->
+<div id="classModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="classModalTitle">Add Class</h3>
+      <button class="close-btn" id="closeClassModal">&times;</button>
     </div>
+    <form id="classForm">
+      <div class="form-group">
+        <label class="form-label" for="classCode">Course Code</label>
+        <input class="form-input" id="classCode" name="courseCode" placeholder="e.g., WAD" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="className">Course Name</label>
+        <input class="form-input" id="className" name="courseName" placeholder="e.g., Web Application Development" required>
+      </div>
+      
+      <!-- NEW FIELD: Total Sessions -->
+      <div class="form-group">
+        <label class="form-label" for="classTotalSessions">Total Sessions</label>
+        <input class="form-input" id="classTotalSessions" name="totalSessions" 
+               placeholder="How many classes will be held?" type="number" min="1" value="12" required>
+        <small style="color: #6b7280; font-size: 0.85rem;">Total number of times this class will meet</small>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="classInstructor">Instructor</label>
+        <input class="form-input" id="classInstructor" name="instructor" placeholder="Instructor Name" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="classDay">Day of Week</label>
+        <select class="form-input" id="classDay" name="dayOfWeek" required>
+          <option value="">Select a day</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="classStartTime">Start Time</label>
+        <input class="form-input" id="classStartTime" name="startTime" type="time" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="classEndTime">End Time</label>
+        <input class="form-input" id="classEndTime" name="endTime" type="time" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="classRoom">Room</label>
+        <input class="form-input" id="classRoom" name="room" placeholder="e.g., A101" required>
+      </div>
+      
+      <div class="modal-buttons">
+        <button type="button" class="btn btn-cancel" id="cancelClassBtn">Cancel</button>
+        <button class="btn btn-save" id="saveClassBtn" type="submit">Save Class</button>
+      </div>
+    </form>
   </div>
+</div>
 
   <script>
     const toggleBtn = document.getElementById('toggleBtn');

@@ -26,8 +26,8 @@ async function fetchStudentInfo() {
     const response = await fetch(`../php/getStudentSessionInfo.php`);
     const student = await response.json();
 
-    document.getElementById("student-name").textContent = `Welcome, ${student.firstName}!`;
-    document.getElementById("student-id").textContent = `Student ID: ${student.studentNo}`;
+    document.getElementById("student-name").querySelector('span').textContent = student.firstName;
+    document.getElementById("student-id").querySelector('span').textContent = student.studentNo;
     document.getElementById("info-name").textContent = `${student.firstName} ${student.lastName}`;
     document.getElementById("info-id").textContent = student.studentNo;
     document.getElementById("info-course").textContent = student.courseCode;
@@ -72,7 +72,6 @@ async function generateQr() {
   }
 }
 
-
 // Fetch attendance summary
 async function fetchAttendanceSummary() {
   try {
@@ -83,44 +82,54 @@ async function fetchAttendanceSummary() {
     const attended = summary.attended || 0;
     const rate = totalClasses > 0 ? Math.round((attended / totalClasses) * 100) : 0;
 
-    document.querySelector(".stats div:nth-child(1) strong").textContent = totalClasses;
-    document.querySelector(".stats div:nth-child(2) strong").textContent = attended;
-    document.querySelector(".stats div:nth-child(3) strong").textContent = `${rate}%`;
+    document.getElementById("total-classes").textContent = totalClasses;
+    document.getElementById("attended-classes").textContent = attended;
+    document.getElementById("attendance-rate").textContent = `${rate}%`;
   } catch (err) {
     console.error("Failed to fetch attendance summary:", err);
   }
 }
 
-// Fetch today's class
+// Fetch today's class - FIXED
 async function fetchTodaysClass() {
   try {
-    const response = await fetch(`../php/getTodaysClass.php?studentNo=${studentId}`);
+    const response = await fetch(`../php/getTodaysClass.php`);
     const classData = await response.json();
 
-    if (!classData || classData.error) {
-      console.warn("No class found for today.");
+    if (classData.error) {
+      console.warn("No class found for today:", classData.error);
+      document.getElementById("class-course").textContent = "No class today";
+      document.getElementById("class-time").textContent = "--";
+      document.getElementById("class-date").textContent = classData.date || new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById("class-room").textContent = "--";
+      document.getElementById("class-instructor").textContent = "--";
       return;
     }
 
-    const card = document.querySelector(".left .card:nth-child(2)");
-    card.querySelector("p:nth-child(2)").innerHTML = `<strong>Course:</strong> ${classData.courseName}`;
-    card.querySelector("p:nth-child(3)").innerHTML = `<strong>Time:</strong> ${classData.startTime} - ${classData.endTime}`;
-    card.querySelector("p:nth-child(4)").innerHTML = `<strong>Date:</strong> ${classData.date}`;
-    card.querySelector("p:nth-child(5)").innerHTML = `<strong>Room:</strong> ${classData.room}`;
-    card.querySelector("p:nth-child(6)").innerHTML = `<strong>Instructor:</strong> ${classData.instructor}`;
+    // Update the "Today's Class" card
+    document.getElementById("class-course").textContent = classData.courseName;
+    document.getElementById("class-time").textContent = `${classData.startTime} - ${classData.endTime}`;
+    document.getElementById("class-date").textContent = classData.date;
+    document.getElementById("class-room").textContent = classData.room;
+    document.getElementById("class-instructor").textContent = classData.instructor;
+
+    // Check if class is starting soon
+    checkClassSoon(classData.startTime);
   } catch (err) {
     console.error("Failed to fetch today's class:", err);
   }
 }
 
 // Check if class is starting soon
-function checkClassSoon() {
+function checkClassSoon(startTimeStr) {
   const now = new Date();
-  const start = new Date();
-  start.setHours(9, 30, 0, 0); // adjust as needed
-  const diff = (start - now) / 60000;
+  const [hours, minutes] = startTimeStr.split(':');
+  const classStart = new Date();
+  classStart.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+  
+  const diffMinutes = (classStart - now) / 60000;
 
-  if (diff > 0 && diff <= 30) {
+  if (diffMinutes > 0 && diffMinutes <= 30) {
     document.getElementById("class-alert").classList.remove("hidden");
   }
 }
@@ -132,4 +141,3 @@ document.getElementById("logout-btn").addEventListener("click", () => {
 
 // Init
 fetchStudentId();
-checkClassSoon();

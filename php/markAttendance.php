@@ -34,13 +34,13 @@ if (!$student = $resultStudent->fetch_assoc()) {
     exit;
 }
 
-// Get current day and time
-$currentDay = date('l'); // e.g., "Monday", "Tuesday"
-$currentTime = date('H:i:s'); // e.g., "09:30:00"
+// Get current day and time - FIXED to match database format
+$currentDay = date('l'); // Returns "Monday", "Tuesday", "Wednesday", "Thursday", etc.
+$currentTime = date('H:i:s');
 
 // Find class that is happening NOW for this student
 $sqlClass = "
-SELECT c.classID, c.courseName, c.startTime, c.endTime
+SELECT c.classID, c.courseName, c.startTime, c.endTime, c.dayOfWeek
 FROM Enrollments e
 JOIN Classes c ON e.classID = c.classID
 WHERE e.studentNo = ? 
@@ -57,7 +57,7 @@ $resultClass = $stmtClass->get_result();
 if (!$class = $resultClass->fetch_assoc()) {
     // Try to find ANY class today (even if not currently happening)
     $sqlAnyClass = "
-    SELECT c.classID, c.courseName, c.startTime, c.endTime
+    SELECT c.classID, c.courseName, c.startTime, c.endTime, c.dayOfWeek
     FROM Enrollments e
     JOIN Classes c ON e.classID = c.classID
     WHERE e.studentNo = ? 
@@ -72,10 +72,12 @@ if (!$class = $resultClass->fetch_assoc()) {
     
     if ($classAny = $resultAny->fetch_assoc()) {
         echo json_encode([
-            'error' => "Class is scheduled for {$classAny['startTime']} - {$classAny['endTime']}. Current time: " . date('H:i:s')
+            'error' => "Class '{$classAny['courseName']}' is scheduled for {$classAny['startTime']} - {$classAny['endTime']}. Current time: " . date('H:i:s')
         ]);
     } else {
-        echo json_encode(['error' => "No class scheduled for today ({$currentDay})"]);
+        echo json_encode([
+            'error' => "No class scheduled for {$currentDay}. Make sure you're enrolled and the class day matches exactly."
+        ]);
     }
     exit;
 }
