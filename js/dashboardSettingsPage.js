@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ===== Tabs =====
+  //Tabs
   const tabButtons = document.querySelectorAll(".tab-btn");
   const tabContents = document.querySelectorAll(".tab-content");
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== STUDENT MODAL =====
+  //STUDENT MODAL
   const studentModal = document.getElementById("studentModal");
   const openStudentBtn = document.getElementById("addStudentBtn");
   const closeStudentBtn = document.getElementById("closeStudentModal");
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cancelStudentBtn.addEventListener("click", () => closeModal(studentModal));
   window.addEventListener("click", e => { if(e.target === studentModal) closeModal(studentModal); });
 
-  // ===== Student Error Handling =====
+  //Student Error Handling
   function setError(input, message) {
     const errorSpan = document.getElementById(`${input.id}Error`);
     errorSpan.textContent = message;
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("input", () => clearError(input));
   });
 
-  // ===== Student Form Submission =====
+  //Student Form Submission
   studentForm.addEventListener("submit", async e => {
     e.preventDefault();
     clearAllErrors();
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ===== Load Students =====
+  //Load Students
   async function loadStudents() {
     try {
       const res = await fetch("../php/getStudentInfo.php");
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadStudents();
 
-  // ===== CLASS MODAL =====
+  //CLASS MODAL
   const classModal = document.getElementById("classModal");
   const openClassBtn = document.getElementById("addClassBtn");
   const closeClassBtn = document.getElementById("closeClassModal");
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cancelClassBtn.addEventListener("click", () => closeModal(classModal));
   window.addEventListener("click", e => { if(e.target === classModal) closeModal(classModal); });
 
-  // ===== Class Form Submission =====
+  //Class Form Submission
   classForm.addEventListener("submit", async e => {
     e.preventDefault();
     const formData = new FormData(classForm);
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ===== Load Classes =====
+  //Load Classes
   async function loadClasses() {
     try {
       const res = await fetch("../php/getClasses.php");
