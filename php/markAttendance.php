@@ -1,5 +1,5 @@
 <?php
-// --- Error handling (enable for testing; disable later) ---
+// Error handling (enable for testing; disable later)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -25,7 +25,7 @@ if (!$studentNo || !is_numeric($studentNo)) {
     exit;
 }
 
-// --- Verify student existence ---
+//Verify student existence
 $stmtStudent = $conn->prepare("SELECT firstName, lastName FROM Students WHERE studentNo = ?");
 $stmtStudent->bind_param("i", $studentNo);
 $stmtStudent->execute();
@@ -36,7 +36,7 @@ if (!$student = $resultStudent->fetch_assoc()) {
     exit;
 }
 
-// --- Current day and time ---
+//Current day and time
 $currentDay = date('l'); // e.g. Monday
 $currentTime = date('H:i:s');
 
@@ -57,7 +57,7 @@ $stmtClass->execute();
 $resultClass = $stmtClass->get_result();
 
 if (!$class = $resultClass->fetch_assoc()) {
-    // --- Try to find any class today (for debug clarity) ---
+
     $sqlAnyClass = "
     SELECT c.classID, c.moduleName, c.startTime, c.endTime, c.dayOfWeek
     FROM Enrollments e
@@ -86,7 +86,7 @@ if (!$class = $resultClass->fetch_assoc()) {
 
 $classID = $class['classID'];
 
-// --- Prevent double check-ins for the same class/day ---
+//prevent double checkins for the same class
 $today = date('Y-m-d');
 $stmtCheck = $conn->prepare("
     SELECT * FROM Attendance 
@@ -102,15 +102,13 @@ if ($stmtCheck->get_result()->num_rows > 0) {
     exit;
 }
 
-// --- Calculate if student is late (more than 10 minutes after start time) ---
+// check for late students
 $startTime = strtotime($class['startTime']);
 $currentTimeStamp = strtotime($currentTime);
 $minutesLate = ($currentTimeStamp - $startTime) / 60;
-
-// Determine status: Present if within 10 minutes, Late if more than 10 minutes
 $status = ($minutesLate <= 10) ? 'Present' : 'Late';
 
-// --- Insert new attendance record with calculated status ---
+// inserts in attendance record with calculate status
 $stmtInsert = $conn->prepare("INSERT INTO Attendance (studentNo, classID, status) VALUES (?, ?, ?)");
 $stmtInsert->bind_param("iis", $studentNo, $classID, $status);
 
