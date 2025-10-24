@@ -14,7 +14,6 @@ if (!$studentNo) {
 // Get current day name
 $currentDay = date('l');
 
-// FIXED: Now queries based on Enrollments, not matching student's courseCode with class courseCode
 // This allows 07BCMS students to see their WAD classes
 $sql = "
 SELECT c.moduleName, c.moduleCode, c.startTime, c.endTime, c.dayOfWeek, c.room, c.instructor
